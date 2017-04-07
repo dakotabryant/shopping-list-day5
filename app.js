@@ -19,8 +19,9 @@ let itemTemplate = (`<li>
                         </div>
                     </li>`);
 
-// Event then renders a new li that includes the user item
-// New li gets styling, and elements of a list item
+
+
+
 
 // this function adds a new item to the state
 
@@ -35,8 +36,52 @@ function checkItem(state, itemIndex) {
   state.items[itemIndex];
 }
 
+
 checkItem(appState, 0);
 
 
 // If user clicks delete button, event fires
 // Delete button removes the clicked li
+
+function removeItem(state, itemIndex) {
+  state.items.splice(itemIndex, 1);
+}
+
+
+// Event then renders a new li that includes the user item
+// New li gets styling, and elements of a list item
+
+
+function renderList(state, element){
+  let itemsHTML = state.items.map(function(item) {
+    return '<li>' + item + '</li>';
+      });
+
+}
+
+
+
+
+[{name: apple, done: true}, {name: orange, done: false}]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
