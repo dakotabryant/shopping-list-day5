@@ -3,7 +3,6 @@
 let appState = {
     items: []
 };
-// this function adds a new item to the state
 let editingObject = {
     state: appState,
 
@@ -18,20 +17,30 @@ let editingObject = {
         currentItem.splice(itemIndex, 1);
     },
 
-    checkItem: function(itemIndex) {
-        this.state.items[itemIndex].done = !this.state.items[itemIndex].done;
+    itemIndex: function(itemName) {
+      return this.state.items.findIndex(function(item) {
+        return item.title === itemName;
+      })
+    },
+
+    checkItem: function(itemName) {
+        var index = this.itemIndex(itemName);
+        this.state.items[index].done = this.state.items[index].done ? false : true;
     }
 }
-
 
 let renderObject = {
     render: function(state) {
       let listParent = $('.shopping-list');
         listParent.html('');
         let newString = '';
-        state.items.forEach(function(item) {
+        state.items.forEach(function(val) {
+            let done = '';
+            if(val.done === true) {
+              done = 'shopping-item__checked';
+            }
             let htmlElement = `<li>
-                              <span class="shopping-item">${item.title}</span>
+                              <span class="shopping-item ${done}">${val.title}</span>
                               <div class="shopping-item-controls">
                                 <button class="shopping-item-toggle">
                                   <span class="button-label">check</span>
@@ -53,25 +62,18 @@ $('#js-shopping-list-form').submit(function(event) {
     event.preventDefault();
     editingObject.addItem(input);
     renderObject.render(appState);
+
 });
 
-$('.shopping-item-toggle').click(function(){
+$('.shopping-list').on('click', 'button', function(event) {
+  if($(this).hasClass('shopping-item-toggle')) {
+    editingObject.checkItem($(event.target).closest('li').find('.shopping-item').text());
+    renderObject.render(appState);
+    console.log(appState.items);
 
-console.log('hello!');
+  } else if($(this).hasClass('shopping-item-delete')) {
+    editingObject.deleteItem();
+
+    renderObject.render(appState);
+  }
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
