@@ -1,87 +1,56 @@
 // Someone types new item in text area
 // User submits, and event fires
 let appState = {
-  items: [
-    { title: 'apple', done: true },
-    { title: 'orange', done: false }
-  ]
+    items: []
 };
-
-let itemTemplate = (`<li>
-                        <span class="shopping-item"></span>
-                        <div class="shopping-item-controls">
-                          <button class="shopping-item-toggle">
-                            <span class="button-label">check</span>
-                          </button>
-                          <button class="shopping-item-delete">
-                            <span class="button-label">delete</span>
-                          </button>
-                        </div>
-                    </li>`);
-
-
-
-
-
 // this function adds a new item to the state
+let editingObject = {
+    state: appState,
 
-function addItem(state, item) {
-  state.items.push(item);
-}
+    addItem: function(task) {
+        let item = { title: task, done: false};
+        item.title = task;
+        this.state.items.push(item);
+    },
 
-// If user clicks check button, event fires
-// Check button event strikes through text
+    deleteItem: function(itemIndex) {
+        let currentItem = this.state.items;
+        currentItem.splice(itemIndex, 1);
+    },
 
-function checkItem(state, itemIndex) {
-  state.items[itemIndex];
-}
-
-
-checkItem(appState, 0);
-
-
-// If user clicks delete button, event fires
-// Delete button removes the clicked li
-
-function removeItem(state, itemIndex) {
-  state.items.splice(itemIndex, 1);
+    checkItem: function(itemIndex) {
+        this.state.items[itemIndex].done = !this.state.items[itemIndex].done;
+    }
 }
 
 
-// Event then renders a new li that includes the user item
-// New li gets styling, and elements of a list item
+let renderObject = {
+    render: function(state) {
+      let listParent = $('.shopping-list');
+        listParent.html('');
+        let newString = '';
+        state.items.forEach(function(item) {
+            let htmlElement = `<li>
+                              <span class="shopping-item">${item.title}</span>
+                              <div class="shopping-item-controls">
+                                <button class="shopping-item-toggle">
+                                  <span class="button-label">check</span>
+                                </button>
+                                <button class="shopping-item-delete">
+                                  <span class="button-label">delete</span>
+                                </button>
+                              </div>
+                          </li>`
+            newString += htmlElement;
+        });
 
-
-function renderList(state, element){
-  let itemsHTML = state.items.map(function(item) {
-    return '<li>' + item + '</li>';
-      });
-
+        listParent.append(newString);
+    }
 }
 
-
-
-
-[{name: apple, done: true}, {name: orange, done: false}]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+$('#js-shopping-list-form').submit(function(event) {
+    let input = $('#shopping-list-entry').val();
+    event.preventDefault();
+    editingObject.addItem(input);
+    renderObject.render(appState);
+});
